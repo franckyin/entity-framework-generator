@@ -1,0 +1,6 @@
+# Do not save configuration files to version control
+*.json
+*.csv
+
+# Do not ignore template files 
+!template.*
