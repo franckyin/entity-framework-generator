@@ -1,5 +1,7 @@
 # Dot Sourcing
+. .\ps-functions\Generate-AuditField.ps1
 . .\ps-functions\Generate-Class.ps1
+. .\ps-functions\Generate-DbContextExtension.ps1
 . .\ps-functions\Generate-FieldComment.ps1
 . .\ps-functions\Generate-FieldDecorator.ps1
 . .\ps-functions\Generate-FieldDefinition.ps1
@@ -23,8 +25,8 @@ function Main {
     $outputPath = $config.outputPath
 
     # Clear Output Repo
-    if ($outputPath -ne "" -and $null -ne $outputPath){
-        Write-Host $outputPath
+    if ($outputPath -ne "" -and $null -ne $outputPath) {
+        
         # Confirm deletion
         $confirm = Read-Host "ARE YOU SURE: CONFIRM DELETE CONTENTS OF: $($outputPath)? (Y/N)"
         if ($confirm -eq 'Y') {
@@ -49,34 +51,26 @@ function Main {
                     Name  = $tableInfo.Name + "Audit"
                     Group = @()
                 }
-                
-                # Copy base PK field reference
-                $basePkField = $tableInfo.Group | Where-Object { $_.Decorator -eq "PK" }
     
-                # Create AuditId PK field from base PK field properties
-                $auditPkField = $basePkField | Select-Object *
-                $auditPkField.Decorator = "PK"
-                $auditPkField.FieldCodeName = $basePkField.FieldCodeName -replace "Id$", "AuditId"
-    
-                # Update base field PK
-                $basePkField.Decorator = "FK"
-    
-                # Create a new array with the new fields prepended
-                $auditTableInfo.Group = @($auditPkField) + $tableInfo.Group
-    
-                $auditTableInfo.Group.ForEach(
+                $tableInfo.Group.ForEach(
                     {
                         # Replace Each Namespace with "Audit"
                         $_.Namespace = "Audit"
-    
-                        # Update the type of each "NP" field
-                        if ($_.Decorator -eq "NP" -and $_.TypeAudit -eq "x") {
-                            $_.Type += "Audit"
+
+                        # Find fields:
+                        # With Decorator "PK"
+                        # With audit properties of either:
+                        # On the Join side of a Many to Many relationship
+                        # On the Child side of a Parent-Child relationship
+                        if ($_.Decorator -eq "PK" -or $_.AuditProp -eq "J - J" -or $_.AuditProp -eq "C") {
+                            $auditTableInfo.Group += @(Generate-AuditField($_))
+                            
+                            # Demoting orignal PK field to FK
+                            if($_.Decorator -eq "PK") {
+                                $_.Decorator = "FK"
+                            }
                         }
-                        # Update the type of each "NPs" field
-                        elseif ($_.Decorator -eq "NPs" -and $_.TypeAudit -eq "x") {
-                            $_.Type = $_.Type -replace "ICollection<(.+)>", 'ICollection<${1}Audit>'
-                        }
+                        $auditTableInfo.Group += @($_)
                     }
                 )
     
@@ -86,6 +80,9 @@ function Main {
                 Generate-Class $auditTableInfo "Dto" $config.namespaceRoot $outputPath
             }
         }
+
+        # Generate the DbContext extension class
+        Generate-DbContextExtension -tables $tables -namespaceRoot $config.namespaceRoot -outputPath $config.outputPath
     }
 }
 

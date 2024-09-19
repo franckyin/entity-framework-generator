@@ -1,1 +1,1 @@
-Namespace,TableCodeName,Audit,FieldFriendlyName,Decorator,Type,TypeAudit,Nullable,FieldCodeName
+Namespace,TableCodeName,Audit,FieldFriendlyName,Decorator,Type,AuditProp,Nullable,FieldCodeName
