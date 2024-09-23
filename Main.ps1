@@ -1,5 +1,6 @@
 # Dot Sourcing
 . .\ps-functions\Generate-AuditField.ps1
+. .\ps-functions\Generate-BaseClass.ps1
 . .\ps-functions\Generate-Class.ps1
 . .\ps-functions\Generate-DbContextExtension.ps1
 . .\ps-functions\Generate-FieldComment.ps1
@@ -81,6 +82,10 @@ function Main {
                 Generate-Class $auditTableInfo "Dto" $config.namespaceRoot $outputPath
             }
         }
+
+        Generate-BaseClass "Entity" $config.namespaceRoot $outputPath
+        Generate-BaseClass "Domain" $config.namespaceRoot $outputPath
+        Generate-BaseClass "Dto" $config.namespaceRoot $outputPath
 
         # Generate the DbContext extension class
         Generate-DbContextExtension -tables $tables -namespaceRoot $config.namespaceRoot -outputPath $config.outputPath
