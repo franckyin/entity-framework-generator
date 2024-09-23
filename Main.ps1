@@ -67,6 +67,7 @@ function Main {
                             
                             # Demoting orignal PK field to FK
                             if($_.Decorator -eq "PK") {
+                                $_.FieldCodeName = "CacheId"
                                 $_.Decorator = "FK"
                             }
                         }

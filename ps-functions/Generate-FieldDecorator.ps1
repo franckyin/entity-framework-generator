@@ -8,12 +8,8 @@ function Generate-FieldDecorator {
     $fieldDecorator = ""
 
     # Decorators are only required in the Entity class definition
-    if ($dataClassType -eq "Entity") {
-        if ($fieldInfo.Decorator -eq "PK") {
-            $fieldDecorator = "[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]"
-        } elseif ($fieldInfo.Decorator.Contains("StringLength")) {
-            $fieldDecorator = $fieldInfo.Decorator
-        }
+    if ($dataClassType -eq "Entity" -and $fieldInfo.Decorator.Contains("StringLength")) {
+        $fieldDecorator = $fieldInfo.Decorator
     }
 
     if ($fieldDecorator -ne "") {

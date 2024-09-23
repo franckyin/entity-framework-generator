@@ -6,9 +6,6 @@ function Generate-AuditField {
     $auditField = $field | Select-Object *
 
     switch ($field.Decorator) {
-        "PK" {
-            $auditField.FieldCodeName = $auditField.FieldCodeName -replace "Id$", "AuditId"
-        }
         "FK" {
             $auditField.FieldCodeName = $auditField.FieldCodeName -replace "Id$", "AuditId"
         }
@@ -24,6 +21,6 @@ function Generate-AuditField {
             $auditField.FieldCodeName = $auditField.FieldCodeName -replace "Refs$", "AuditRefs"
         }
     }
-
+    $field | Select-Object *
     return $auditField
 }

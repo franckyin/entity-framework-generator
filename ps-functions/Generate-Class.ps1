@@ -31,7 +31,7 @@ using $namespaceRoot.$dataClassType.Audit;
 
 namespace $namespace
 {
-    public class $className
+    public class $className : Base$dataClassType
     {
 
 "@
@@ -43,13 +43,9 @@ namespace $namespace
 
     # Fields    
     foreach ($field in $tableInfo.Group) {
-        if ($isAudit -and $field.Decorator -eq "PK") {
-            # Create a new primary key for audit trail
-            $classBodyString += "        // Audit Trail Primary Key`n"
-            $classBodyString += "        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]`n"
-            $classBodyString += "        public int $($tableInfo.Name)AtId { get; set; }`n"
-            $classBodyString += "        // Foreign Key from original table`n"
-            $classBodyString += "        public int $($field.FieldCodeName) { get; set; }`n"
+
+        if ($field.Decorator -eq "PK") {
+            # Do not create field. All classes will extend a base class, which contains the PK ID.
         }
         else {
             $classBodyString += "$(Generate-FieldComment $field $dataClassType)"

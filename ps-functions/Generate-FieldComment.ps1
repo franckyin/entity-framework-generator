@@ -8,10 +8,6 @@ function Generate-FieldComment {
     $fieldComment = ""
 
     switch ($fieldInfo.Decorator) {
-        "PK" {
-            $fieldComment = "Primary Key"
-            break
-        }
         "FK" {
             $fieldComment = "Navigation Property - Foreign Key"
             break
