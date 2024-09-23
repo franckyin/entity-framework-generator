@@ -40,7 +40,7 @@ namespace $namespace
         $classBodyString += "        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]"
         $classBodyString += "`n"
     }
-    $classBodyString += "        public string Id { get; set; }"
+    $classBodyString += "        public int Id { get; set; }"
     $classBodyString += "`n"
 
     # Class Text
