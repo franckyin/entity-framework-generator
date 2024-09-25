@@ -21,6 +21,5 @@ function Generate-AuditField {
             $auditField.FieldCodeName = $auditField.FieldCodeName -replace "Refs$", "AuditRefs"
         }
     }
-    $field | Select-Object *
     return $auditField
 }
