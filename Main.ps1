@@ -63,14 +63,8 @@ function Main {
                         # With audit properties of either:
                         # On the Join side of a Many to Many relationship
                         # On the Child side of a Parent-Child relationship
-                        if ($_.Decorator -eq "PK" -or $_.AuditProp -in @("N - J", "J - J", "P", "C")) {
+                        if ($_.AuditProp -eq "J - J" -or $_.AuditProp -eq "C") {
                             $auditTableInfo.Group += @(Generate-AuditField($_))
-                            
-                            # Demoting orignal PK field to FK
-                            if($_.Decorator -eq "PK") {
-                                $_.FieldCodeName = "CacheId"
-                                $_.Decorator = "FK"
-                            }
                         }
                         $auditTableInfo.Group += @($_)
                     }
@@ -83,9 +77,13 @@ function Main {
             }
         }
 
-        Generate-BaseClass "Entity" $config.namespaceRoot $outputPath
-        Generate-BaseClass "Domain" $config.namespaceRoot $outputPath
-        Generate-BaseClass "Dto" $config.namespaceRoot $outputPath
+        Generate-BaseClass "Entity" $config.namespaceRoot $outputPath -isAuditExtension $false
+        Generate-BaseClass "Domain" $config.namespaceRoot $outputPath -isAuditExtension $false
+        Generate-BaseClass "Dto" $config.namespaceRoot $outputPath -isAuditExtension $false
+    
+        Generate-BaseClass "Entity" $config.namespaceRoot $outputPath -isAuditExtension $true
+        Generate-BaseClass "Domain" $config.namespaceRoot $outputPath -isAuditExtension $true
+        Generate-BaseClass "Dto" $config.namespaceRoot $outputPath -isAuditExtension $true
 
         # Generate the DbContext extension class
         Generate-DbContextExtension -tables $tables -namespaceRoot $config.namespaceRoot -outputPath $config.outputPath

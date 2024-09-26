@@ -19,6 +19,17 @@ function Generate-Class {
         $namespace = "$namespaceRoot.$dataClassType"
     }
 
+    # Extension
+    $classExtensionString = ""
+
+    if ($tableInfo.Group[0].Namespace -ne "Audit") {
+        $classExtensionString = " : Base$dataClassType"
+    }
+    else {
+        $classExtensionString = " : BaseAudit$dataClassType"
+    }
+
+
     # Strings
     $classOpeningString = @"
 using System;
@@ -31,7 +42,7 @@ using $namespaceRoot.$dataClassType.Audit;
 
 namespace $namespace
 {
-    public class $className : Base$dataClassType
+    public class $className$classExtensionString
     {
 
 "@
