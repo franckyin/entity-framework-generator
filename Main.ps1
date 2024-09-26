@@ -63,7 +63,7 @@ function Main {
                         # With audit properties of either:
                         # On the Join side of a Many to Many relationship
                         # On the Child side of a Parent-Child relationship
-                        if ($_.AuditProp -eq "J - J" -or $_.AuditProp -eq "C") {
+                        if ($_.AuditProp -in @("N - J", "J - J", "P", "C")) {
                             $auditTableInfo.Group += @(Generate-AuditField($_))
                         }
                         $auditTableInfo.Group += @($_)
