@@ -14,11 +14,12 @@ function Generate-BaseClass {
     $usingString = ""
     if ($isAuditExtension -eq $false) {
         $className = "Base$dataClassType"
+        $classExtensionString = " : I$dataClassType"
         $namespace = "$namespaceRoot.$dataClassType"
     }
     else {
         $className = "BaseAudit$dataClassType"
-        $classExtensionString = " : Base$dataClassType"
+        $classExtensionString = " : Base$dataClassType, IAudit$dataClassType"
         $namespace = "$namespaceRoot.$dataClassType.Audit"
         $usingString = "using $namespaceRoot.$dataClassType;`n"
     }

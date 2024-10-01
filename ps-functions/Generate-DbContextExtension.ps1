@@ -36,7 +36,9 @@ function Generate-DbContextExtension {
     # Combine the template and the DbSet lines
     $finalDbContextContent = @"
 using Microsoft.EntityFrameworkCore;
-using $namespaceRoot.Entities;
+using $namespaceRoot.Entity;
+using $namespaceRoot.Entity.Audit;
+using $namespaceRoot.Entity.Core;
 
 namespace $namespaceRoot
 {

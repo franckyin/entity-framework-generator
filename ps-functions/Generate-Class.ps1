@@ -23,10 +23,10 @@ function Generate-Class {
     $classExtensionString = ""
 
     if ($tableInfo.Group[0].Namespace -ne "Audit") {
-        $classExtensionString = " : Base$dataClassType"
+        $classExtensionString = " : Base$dataClassType, I$dataClassType"
     }
     else {
-        $classExtensionString = " : BaseAudit$dataClassType"
+        $classExtensionString = " : BaseAudit$dataClassType, IAudit$dataClassType"
     }
 
 

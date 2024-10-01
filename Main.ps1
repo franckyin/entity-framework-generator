@@ -6,6 +6,7 @@
 . .\ps-functions\Generate-FieldComment.ps1
 . .\ps-functions\Generate-FieldDecorator.ps1
 . .\ps-functions\Generate-FieldDefinition.ps1
+. .\ps-functions\Generate-Interface.ps1
 
 # Definition
 function Main {
@@ -80,10 +81,18 @@ function Main {
         Generate-BaseClass "Entity" $config.namespaceRoot $outputPath -isAuditExtension $false
         Generate-BaseClass "Domain" $config.namespaceRoot $outputPath -isAuditExtension $false
         Generate-BaseClass "Dto" $config.namespaceRoot $outputPath -isAuditExtension $false
+
+        Generate-Interface "Entity" $config.namespaceRoot $outputPath -isAuditExtension $false
+        Generate-Interface "Domain" $config.namespaceRoot $outputPath -isAuditExtension $false
+        Generate-Interface "Dto" $config.namespaceRoot $outputPath -isAuditExtension $false
     
         Generate-BaseClass "Entity" $config.namespaceRoot $outputPath -isAuditExtension $true
         Generate-BaseClass "Domain" $config.namespaceRoot $outputPath -isAuditExtension $true
         Generate-BaseClass "Dto" $config.namespaceRoot $outputPath -isAuditExtension $true
+
+        Generate-Interface "Entity" $config.namespaceRoot $outputPath -isAuditExtension $true
+        Generate-Interface "Domain" $config.namespaceRoot $outputPath -isAuditExtension $true
+        Generate-Interface "Dto" $config.namespaceRoot $outputPath -isAuditExtension $true
 
         # Generate the DbContext extension class
         Generate-DbContextExtension -tables $tables -namespaceRoot $config.namespaceRoot -outputPath $config.outputPath
