@@ -11,12 +11,6 @@ function Generate-FieldDefinition {
     if ($fieldInfo.Decorator -eq "FKs" -and $dataClassType -eq "Entity") {
         $fieldDefinition = "// $($fieldInfo.FieldCodeName) - One-to-Many Foreign Keys not defined in Entity"
     }
-    elseif (
-        $fieldInfo.Decorator -eq "NPs" -and $dataClassType -eq "Entity" -and
-        $fieldInfo.FieldCodeName.EndsWith("AuditRefs") -eq $false -and $isAuditClass -eq $true
-    ) {
-        $fieldDefinition = "// $($fieldInfo.FieldCodeName) - Navigation Property arrays not defined in Audit Entity"
-    }
     else {
         # Nullable attributes
         $nullable = ""

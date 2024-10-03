@@ -1,5 +1,4 @@
 # Dot Sourcing
-. .\ps-functions\Generate-AuditField.ps1
 . .\ps-functions\Generate-BaseClass.ps1
 . .\ps-functions\Generate-Class.ps1
 . .\ps-functions\Generate-DbContextExtension.ps1
@@ -15,7 +14,7 @@ function Main {
 
     # Load Configuration
     $configPath = ".\files\config.json"
-    $config = Get-Content $configPath -raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+    $config = Get-Content $configPath -raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop   
 
     # Load Field Data
     $fields = Import-Csv -Path ".\files\fields.csv"
@@ -41,9 +40,9 @@ function Main {
         # Generate classes
         foreach ($tableInfo in $tables) {
             Write-Host "--- $($tableInfo.Group[0].Namespace) - $($tableInfo.Name) ---"
-            Generate-Class $tableInfo "Entity" $config.namespaceRoot $outputPath -isAuditClass $false
-            Generate-Class $tableInfo "Domain" $config.namespaceRoot $outputPath -isAuditClass $false
-            Generate-Class $tableInfo "Dto" $config.namespaceRoot $outputPath -isAuditClass $false
+            Generate-Class $tableInfo "Entity" $config.namespaceRoot $outputPath
+            Generate-Class $tableInfo "Domain" $config.namespaceRoot $outputPath
+            Generate-Class $tableInfo "Dto" $config.namespaceRoot $outputPath
     
             # Audit Trail classes
             if ($tableInfo.Group[0].Audit -eq "x") {
@@ -51,30 +50,14 @@ function Main {
                 # Create Audit Table Info PS Custom Object
                 $auditTableInfo = [pscustomobject]@{
                     Name  = $tableInfo.Name + "Audit"
-                    Group = @()
+                    Group = $tableInfo.Group
                 }
-    
-                $tableInfo.Group.ForEach(
-                    {
-                        # Replace Each Namespace with "Audit"
-                        $_.Namespace = "Audit"
-
-                        # Find fields:
-                        # With Decorator "PK"
-                        # With audit properties of either:
-                        # On the Join side of a Many to Many relationship
-                        # On the Child side of a Parent-Child relationship
-                        if ($_.AuditProp -in @("N - J", "J - J", "P", "C")) {
-                            $auditTableInfo.Group += @(Generate-AuditField($_))
-                        }
-                        $auditTableInfo.Group += @($_)
-                    }
-                )
+                $auditTableInfo.Group.ForEach({ $_.Namespace = "Audit" })
     
                 # Generate audit trail classes
-                Generate-Class $auditTableInfo "Entity" $config.namespaceRoot $outputPath -isAuditClass $true
-                Generate-Class $auditTableInfo "Domain" $config.namespaceRoot $outputPath -isAuditClass $true
-                Generate-Class $auditTableInfo "Dto" $config.namespaceRoot $outputPath -isAuditClass $true
+                Generate-Class $auditTableInfo "Entity" $config.namespaceRoot $outputPath
+                Generate-Class $auditTableInfo "Domain" $config.namespaceRoot $outputPath
+                Generate-Class $auditTableInfo "Dto" $config.namespaceRoot $outputPath
             }
         }
 
