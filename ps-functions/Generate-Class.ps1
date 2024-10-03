@@ -4,7 +4,8 @@ function Generate-Class {
         [pscustomobject]$tableInfo,
         [string]$dataClassType,
         [string]$namespaceRoot,
-        [string]$outputPath
+        [string]$outputPath,
+        [bool]$isAuditClass
     )
 
     # Class Name
@@ -61,7 +62,7 @@ namespace $namespace
         else {
             $classBodyString += "$(Generate-FieldComment $field $dataClassType)"
             $classBodyString += "$(Generate-FieldDecorator $field $dataClassType)"
-            $classBodyString += "$(Generate-FieldDefinition $field $dataClassType)"
+            $classBodyString += "$(Generate-FieldDefinition $field $dataClassType -isAuditClass $isAuditClass)"
             $classBodyString += "`n"
         }
     }

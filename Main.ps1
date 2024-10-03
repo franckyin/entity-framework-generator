@@ -41,9 +41,9 @@ function Main {
         # Generate classes
         foreach ($tableInfo in $tables) {
             Write-Host "--- $($tableInfo.Group[0].Namespace) - $($tableInfo.Name) ---"
-            Generate-Class $tableInfo "Entity" $config.namespaceRoot $outputPath
-            Generate-Class $tableInfo "Domain" $config.namespaceRoot $outputPath
-            Generate-Class $tableInfo "Dto" $config.namespaceRoot $outputPath
+            Generate-Class $tableInfo "Entity" $config.namespaceRoot $outputPath -isAuditClass $false
+            Generate-Class $tableInfo "Domain" $config.namespaceRoot $outputPath -isAuditClass $false
+            Generate-Class $tableInfo "Dto" $config.namespaceRoot $outputPath -isAuditClass $false
     
             # Audit Trail classes
             if ($tableInfo.Group[0].Audit -eq "x") {
@@ -72,9 +72,9 @@ function Main {
                 )
     
                 # Generate audit trail classes
-                Generate-Class $auditTableInfo "Entity" $config.namespaceRoot $outputPath
-                Generate-Class $auditTableInfo "Domain" $config.namespaceRoot $outputPath
-                Generate-Class $auditTableInfo "Dto" $config.namespaceRoot $outputPath
+                Generate-Class $auditTableInfo "Entity" $config.namespaceRoot $outputPath -isAuditClass $true
+                Generate-Class $auditTableInfo "Domain" $config.namespaceRoot $outputPath -isAuditClass $true
+                Generate-Class $auditTableInfo "Dto" $config.namespaceRoot $outputPath -isAuditClass $true
             }
         }
 
