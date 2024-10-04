@@ -8,8 +8,16 @@ function Generate-FieldDefinition {
     )
 
     $fieldDefinition = ""
-    if ($fieldInfo.Decorator -eq "FKs" -and $dataClassType -eq "Entity") {
-        $fieldDefinition = "// $($fieldInfo.FieldCodeName) - One-to-Many Foreign Keys not defined in Entity"
+    if ($dataClassType -eq "Entity" -and $fieldInfo.Decorator -eq "FKs") {
+        if ($isAuditClass -eq $false) {
+            $fieldDefinition = "// $($fieldInfo.FieldCodeName) - One-to-Many Foreign Keys not defined in Entity"
+        }
+        else {
+            $fieldDefinition = "// $($fieldInfo.FieldCodeName) - One-to-Many Foreign Keys not defined in Audit Entity"
+        }
+    }
+    elseif ($dataClassType -eq "Entity" -and $fieldInfo.Decorator -eq "NPs" -and $isAuditClass -eq $true) {
+        $fieldDefinition = "// $($fieldInfo.FieldCodeName) - One-to-Many Foreign References not defined in Audit Entity"
     }
     else {
         # Nullable attributes
