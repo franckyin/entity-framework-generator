@@ -6,6 +6,7 @@
 . .\ps-functions\Generate-FieldDecorator.ps1
 . .\ps-functions\Generate-FieldDefinition.ps1
 . .\ps-functions\Generate-Interface.ps1
+. .\ps-functions\Generate-Schemas.ps1
 
 # Definition
 function Main {
@@ -79,6 +80,9 @@ function Main {
 
         # Generate the DbContext extension class
         # Generate-DbContextExtension -tables $tables -namespaceRoot $config.namespaceRoot -outputPath $config.outputPath
+
+        # Generate Schemas
+        Generate-Schemas $fields $outputPath
     }
 }
 
