@@ -51,8 +51,14 @@ $dbSetCode
 }
 "@
 
-    # Write the generated DbContext to the output path
+    # Replace CRLF (`r`n) with LF (`n`)
+    $finalDbContextContent = $finalDbContextContent -replace "`r`n", "`n"
+    $finalDbContextContent += "`n"
+
+    # Write the file
     $outputFilePath = Join-Path $outputPath "ApplicationDbContext.cs"
-    Set-Content -Path $outputFilePath -Value $finalDbContextContent
-    Write-Host "Generated DbContext at $outputFilePath"
+    $writer = New-Object System.IO.StreamWriter($outputFilePath, $false)
+    $writer.Write($finalDbContextContent)
+    $writer.Close()
+    Write-Host "Generated: $outputFilePath"
 }

@@ -166,6 +166,13 @@ function Generate-Schemas {
     $fileContents = $fileContents.TrimEnd(',')
     $fileContents += "`n};"
 
-    Set-Content -Path $schemaOutputPath -Value $fileContents
+    # Replace CRLF (`r`n) with LF (`n`)
+    $fileContents = $fileContents -replace "`r`n", "`n"
+    $fileContents += "`n"
+
+    # Write the file
+    $writer = New-Object System.IO.StreamWriter($schemaOutputPath, $false)
+    $writer.Write($fileContents)
+    $writer.Close()
     Write-Host "Generated: $schemaOutputPath"
 }

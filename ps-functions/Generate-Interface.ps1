@@ -63,8 +63,14 @@ namespace $namespace
         Write-Host "New Item $interfaceOutputPath"
     }
 
+    # Replace CRLF (`r`n) with LF (`n`)
+    $fileContents = $fileContents -replace "`r`n", "`n"
+    $fileContents += "`n"
+
     # Write the file
     $filePath = "$interfaceOutputPath\$interfaceName.cs"
-    Set-Content -Path $filePath -Value $fileContents
+    $writer = New-Object System.IO.StreamWriter($filePath, $false)
+    $writer.Write($fileContents)
+    $writer.Close()
     Write-Host "Generated: $filePath"
 }
